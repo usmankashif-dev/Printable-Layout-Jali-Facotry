@@ -18,6 +18,48 @@ Route::get('/dashboard', function () {
     return Inertia::render('Dashboard');
 })->middleware(['auth', 'verified'])->name('dashboard');
 
+Route::get('/BillaA', function () {
+    $billaFormId = request('billaFormId');
+    $billaFormData = null;
+    if ($billaFormId) {
+        $billaFormData = App\Models\BillaRecord::find($billaFormId);
+    }
+    return Inertia::render('BundleBillaA', [
+        'billaFormData' => $billaFormData,
+    ]);
+})->middleware(['auth', 'verified'])->name('BillaA');
+
+Route::get('/BillaB', function () {
+    $billaFormId = request('billaFormId');
+    $billaFormData = null;
+    if ($billaFormId) {
+        $billaFormData = App\Models\BillaRecord::find($billaFormId);
+    }
+    return Inertia::render('BundleBillaB', [
+        'billaFormData' => $billaFormData,
+    ]);
+})->middleware(['auth', 'verified'])->name('BillaB');
+
+Route::get('/BillaC', function () {
+    $billaFormId = request('billaFormId');
+    $billaFormData = null;
+    if ($billaFormId) {
+        $billaFormData = App\Models\BillaRecord::find($billaFormId);
+    }
+    return Inertia::render('BundleBillaC', [
+        'billaFormData' => $billaFormData,
+    ]);
+})->middleware(['auth', 'verified'])->name('BillaC');
+
+Route::get('/BillaForm', function () {
+    return Inertia::render('BillaForm');
+})->middleware(['auth', 'verified'])->name('BillaForm');
+
+Route::post('/BillaForm', [App\Http\Controllers\BillaRecordController::class, 'store'])->middleware(['auth', 'verified'])->name('BillaForm.store');
+
+
+Route::get('/History', [App\Http\Controllers\HistoryController::class, 'index'])->middleware(['auth', 'verified'])->name('History');
+
 Route::middleware('auth')->group(function () {
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
