@@ -52,6 +52,22 @@ function PrintWrapper({ bundle, stock, order = {} }) {
         id="print-wrapper"
         className="flex items-center justify-center bg-[#f5f5f5] overflow-hidden pt-16 h-screen"
       >
+          {/* Centered Logo Overlay */}
+          <img
+            src="/Images/Jali_tahir-Logo.PNG"
+            alt="Logo"
+        style={{
+          position: 'absolute',
+          left: '42%', 
+          top: '60%',
+          transform: 'translate(-50%, -50%) rotate(90deg)',
+          opacity: 0.5,
+          zIndex: 10,
+          width: '110px', // smaller size
+          height: '110px',
+          pointerEvents: 'none',
+        }}
+          />
         <div
           id="wrapper"
           className="w-[450px] border-4 border-dashed border-gray-400 bg-white print:rotate-0"

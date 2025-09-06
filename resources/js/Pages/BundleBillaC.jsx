@@ -23,6 +23,22 @@ function PrintContent({ bundle, stock, order = {} }) {
         id="contentarea"
         className="max-w-[650px] border-[6px] border-dashed border-gray-400 bg-white mx-auto h-[425px] p-0 print:max-w-[600px] print:mt-[-5px]"
       >
+          {/* Centered Logo Overlay */}
+          <img
+            src="/Images/Jali_tahir-Logo.PNG"
+            alt="Logo"
+              style={{
+                position: 'absolute',
+                left: '50%',
+                top: '50%',
+                transform: 'translate(-50%, -50%)',
+                opacity: 0.5,
+                zIndex: 10,
+                width: '120px',
+                height: '120px',
+                pointerEvents: 'none',
+              }}
+          />
         <div id="billa">
           <h1 className="text-[70px] text-center font-extrabold m-0 font-sans">
             {stock?.khana ?? ""}{"\u00A0"}{stock?.sheet_size ?? ""}
