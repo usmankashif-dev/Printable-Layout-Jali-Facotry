@@ -1,3 +1,4 @@
+
 <?php
 
 use App\Http\Controllers\ProfileController;
@@ -54,6 +55,18 @@ Route::get('/BillaC', function () {
 Route::get('/BillaForm', function () {
     return Inertia::render('BillaForm');
 })->middleware(['auth', 'verified'])->name('BillaForm');
+
+Route::get('/print-billa', function () {
+    $originalOrderId = request('originalOrderId');
+    $selectedType = request('selectedType');
+    return Inertia::render('PrintBillaSelection', [
+        'originalOrderId' => $originalOrderId,
+        'selectedType' => $selectedType
+    ]);
+})->middleware(['auth', 'verified'])->name('print-billa');
+
+Route::post('/print-billa', [App\Http\Controllers\BillaRecordController::class, 'storePrintInfo'])
+    ->middleware(['auth', 'verified'])->name('print-billa.store');
 
 Route::post('/BillaForm', [App\Http\Controllers\BillaRecordController::class, 'store'])->middleware(['auth', 'verified'])->name('BillaForm.store');
 

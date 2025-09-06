@@ -16,5 +16,6 @@ class BillaRecord extends Model
         'khana', 'ogauge', 'b_width', 'jalilenght', 'sheet_size', 'lot', 'machine_id', 'party_name', 'stock_packed_by', 'stock_date',
         // Order
         'order_ogauge', 'order_jalilenght', 'cutsheet', 'order_lot', 'order_party_name',
+        'printed_billa_type', 'printed_billa_quantity',
     ];
 }

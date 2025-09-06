@@ -6,7 +6,7 @@ const HistoryPage = () => {
   const { records } = usePage().props;
 
   const handleBillaClick = (type, id) => {
-    Inertia.get(`/${type}`, { billaFormId: id });
+    Inertia.get('/print-billa', { originalOrderId: id, selectedType: type });
   };
 
   return (
@@ -21,6 +21,8 @@ const HistoryPage = () => {
             <th className="px-4 py-2 border">Lot</th>
             <th className="px-4 py-2 border">Party Name</th>
             <th className="px-4 py-2 border">Packed By</th>
+            <th className="px-4 py-2 border">Printed Billa Type</th>
+            <th className="px-4 py-2 border">Printed Quantity</th>
             <th className="px-4 py-2 border">Actions</th>
           </tr>
         </thead>
@@ -34,6 +36,8 @@ const HistoryPage = () => {
                 <td className="px-4 py-2 border">{item.lot}</td>
                 <td className="px-4 py-2 border">{item.party_name}</td>
                 <td className="px-4 py-2 border">{item.bundle_packed_by || item.stock_packed_by}</td>
+                <td className="px-4 py-2 border">{item.printed_billa_type || '-'}</td>
+                <td className="px-4 py-2 border">{item.printed_billa_quantity || '-'}</td>
                 <td className="px-4 py-2 border text-center">
                   <button className="bg-blue-500 text-white px-2 py-1 rounded mr-2" onClick={() => handleBillaClick('BillaA', item.id)}>Billa A</button>
                   <button className="bg-green-500 text-white px-2 py-1 rounded mr-2" onClick={() => handleBillaClick('BillaB', item.id)}>Billa B</button>
@@ -42,7 +46,7 @@ const HistoryPage = () => {
               </tr>
             ))
           ) : (
-            <tr><td colSpan={7} className="text-center py-4">No history found.</td></tr>
+            <tr><td colSpan={9} className="text-center py-4">No history found.</td></tr>
           )}
         </tbody>
       </table>

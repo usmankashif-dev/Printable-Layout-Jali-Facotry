@@ -33,6 +33,8 @@ const BillaForm = () => {
     lot: '',
     party_name: ''
   });
+  const [billaType, setBillaType] = useState('BillaA');
+  const [billaQuantity, setBillaQuantity] = useState('');
 
   const handleBundleChange = e => {
     const { name, value } = e.target;
@@ -71,6 +73,9 @@ const BillaForm = () => {
       cutsheet: order.cutsheet,
       order_lot: order.lot,
       order_party_name: order.party_name,
+      // Billa fields
+      printed_billa_type: billaType,
+      printed_billa_quantity: billaQuantity,
     });
   };
 
@@ -144,6 +149,19 @@ const BillaForm = () => {
         </label>
       </div>
 
+      <div className={sectionClass}>
+        <h2 className="text-xl font-semibold mb-4 text-pink-700">Billa Info</h2>
+        <label className={labelClass}>Billa Type
+          <select value={billaType} onChange={e => setBillaType(e.target.value)} className={inputClass} required>
+            <option value="BillaA">Billa A</option>
+            <option value="BillaB">Billa B</option>
+            <option value="BillaC">Billa C</option>
+          </select>
+        </label>
+        <label className={labelClass}>Billa Quantity
+          <input type="number" value={billaQuantity} onChange={e => setBillaQuantity(e.target.value)} required className={inputClass} />
+        </label>
+      </div>
       <button type="submit" className="w-full py-3 bg-blue-600 text-white font-bold rounded-lg shadow hover:bg-blue-700 transition">Submit</button>
     </form>
   );
