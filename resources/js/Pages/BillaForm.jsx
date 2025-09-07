@@ -51,6 +51,10 @@ const BillaForm = () => {
 
   const handleSubmit = e => {
     e.preventDefault();
+    // Compute Lot value for submission (date of lot - sheet size)
+    const computedLot = stock.date && stock.sheet_size
+      ? `${stock.date}-${stock.sheet_size}`
+      : '';
     Inertia.post('/BillaForm', {
       // Bundle
       sheets_per_bundle: bundle.sheets_per_bundle,
@@ -62,7 +66,7 @@ const BillaForm = () => {
       b_width: stock.b_width,
       jalilenght: stock.jalilenght,
       sheet_size: stock.sheet_size,
-      lot: stock.lot,
+      lot: computedLot,
       machine_id: stock.machine_id,
       party_name: stock.party_name,
       stock_packed_by: stock.packed_by,
@@ -83,82 +87,86 @@ const BillaForm = () => {
     <form onSubmit={handleSubmit} className="max-w-2xl mx-auto bg-gray-50 p-8 rounded-xl shadow-lg">
       <h1 className="text-2xl font-bold mb-6 text-center">Billa Form</h1>
 
+      {/* Live Lot Preview */}
+      <div className="mb-6 p-4 bg-blue-50 rounded-lg text-blue-800 text-lg font-semibold text-center">
+        Lot Preview: {
+          stock.date && stock.b_width && stock.jalilenght && stock.ogauge
+            ? `${stock.date}-${stock.b_width}-${stock.jalilenght}-${stock.ogauge}`
+            : 'Fill all fields to see Lot'
+        }
+      </div>
+
       <div className={sectionClass}>
         <h2 className="text-xl font-semibold mb-4 text-blue-700">Bundle</h2>
-        <label className={labelClass}>Sheets per Bundle
+        <label className={labelClass}>Sheets per Bundle:
           <input type="number" name="sheets_per_bundle" value={bundle.sheets_per_bundle} onChange={handleBundleChange} required className={inputClass} />
         </label>
-        <label className={labelClass}>Date
+        <label className={labelClass}>Date:
           <input type="date" name="date" value={bundle.date} onChange={handleBundleChange} required className={inputClass} />
         </label>
-        <label className={labelClass}>Packed By
+        <label className={labelClass}>Packed By:
           <input type="text" name="packed_by" value={bundle.packed_by} onChange={handleBundleChange} className={inputClass} />
         </label>
       </div>
 
       <div className={sectionClass}>
         <h2 className="text-xl font-semibold mb-4 text-green-700">Stock</h2>
-        <label className={labelClass}>Khana
+        <label className={labelClass}>Khana:
           <input type="text" name="khana" value={stock.khana} onChange={handleStockChange} required className={inputClass} />
         </label>
-        <label className={labelClass}>Ogauge
+        <label className={labelClass}>Order Gauge:
           <input type="text" name="ogauge" value={stock.ogauge} onChange={handleStockChange} required className={inputClass} />
         </label>
-        <label className={labelClass}>B Width
+        <label className={labelClass}>Bundle Width:
           <input type="text" name="b_width" value={stock.b_width} onChange={handleStockChange} required className={inputClass} />
         </label>
-        <label className={labelClass}>Jalilenght
+        <label className={labelClass}>Jali lenght:
           <input type="number" name="jalilenght" value={stock.jalilenght} onChange={handleStockChange} required className={inputClass} />
         </label>
-        <label className={labelClass}>Sheet Size
+        <label className={labelClass}>Sheet Size:
           <input type="text" name="sheet_size" value={stock.sheet_size} onChange={handleStockChange} required className={inputClass} />
         </label>
-        <label className={labelClass}>Lot
-          <input type="text" name="lot" value={stock.lot} onChange={handleStockChange} required className={inputClass} />
+        {/* Lot is now computed and not entered manually */}
+        <label className={labelClass}>Lot: (Auto-generated)
+          <input
+            type="text"
+            name="lot"
+            value={
+              stock.date && stock.sheet_size
+                ? `${stock.date}-${stock.sheet_size}`
+                : ''
+            }
+            readOnly
+            className={inputClass}
+            style={{ backgroundColor: '#f3f4f6' }}
+          />
         </label>
-        <label className={labelClass}>Machine ID
+        <label className={labelClass}>Machine No:
           <input type="text" name="machine_id" value={stock.machine_id} onChange={handleStockChange} required className={inputClass} />
         </label>
-        <label className={labelClass}>Party Name
+        <label className={labelClass}>Party Name:
           <input type="text" name="party_name" value={stock.party_name} onChange={handleStockChange} required className={inputClass} />
         </label>
-        <label className={labelClass}>Packed By
+        <label className={labelClass}>Packed By:
           <input type="text" name="packed_by" value={stock.packed_by} onChange={handleStockChange} required className={inputClass} />
         </label>
-        <label className={labelClass}>Date
+        <label className={labelClass}>Date:
           <input type="date" name="date" value={stock.date} onChange={handleStockChange} required className={inputClass} />
         </label>
       </div>
 
-      <div className={sectionClass}>
-        <h2 className="text-xl font-semibold mb-4 text-purple-700">Order (Optional Fallbacks)</h2>
-        <label className={labelClass}>Ogauge
-          <input type="number" name="ogauge" value={order.ogauge} onChange={handleOrderChange} className={inputClass} />
-        </label>
-        <label className={labelClass}>Jalilenght
-          <input type="number" name="jalilenght" value={order.jalilenght} onChange={handleOrderChange} className={inputClass} />
-        </label>
-        <label className={labelClass}>Cutsheet
-          <input type="text" name="cutsheet" value={order.cutsheet} onChange={handleOrderChange} className={inputClass} />
-        </label>
-        <label className={labelClass}>Lot
-          <input type="text" name="lot" value={order.lot} onChange={handleOrderChange} className={inputClass} />
-        </label>
-        <label className={labelClass}>Party Name
-          <input type="text" name="party_name" value={order.party_name} onChange={handleOrderChange} className={inputClass} />
-        </label>
-      </div>
+    
 
       <div className={sectionClass}>
         <h2 className="text-xl font-semibold mb-4 text-pink-700">Billa Info</h2>
-        <label className={labelClass}>Billa Type
+        <label className={labelClass}>Billa Type:
           <select value={billaType} onChange={e => setBillaType(e.target.value)} className={inputClass} required>
             <option value="BillaA">Billa A</option>
             <option value="BillaB">Billa B</option>
             <option value="BillaC">Billa C</option>
           </select>
         </label>
-        <label className={labelClass}>Billa Quantity
+        <label className={labelClass}>Billa Quantity:
           <input type="number" value={billaQuantity} onChange={e => setBillaQuantity(e.target.value)} required className={inputClass} />
         </label>
       </div>

@@ -58,13 +58,13 @@ function PrintWrapper({ bundle, stock, order = {} }) {
             alt="Logo"
         style={{
           position: 'absolute',
-          left: '42%', 
-          top: '60%',
+          left: '45%', 
+          top: '58%',
           transform: 'translate(-50%, -50%) rotate(90deg)',
-          opacity: 0.5,
+          opacity: 0.1,
           zIndex: 10,
-          width: '110px', // smaller size
-          height: '110px',
+          width: '100px', // smaller size
+          height: '100px',
           pointerEvents: 'none',
         }}
           />
