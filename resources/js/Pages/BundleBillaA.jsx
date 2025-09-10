@@ -47,7 +47,7 @@ function PrintWrapper({ bundle, stock, order = {} }) {
           }
         }
       `}</style>
-
+<a href="/dashboard">Go Back</a>
       <div
         id="print-wrapper"
         className="flex items-center justify-center bg-[#f5f5f5] overflow-hidden pt-16 h-screen"

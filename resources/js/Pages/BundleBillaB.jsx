@@ -85,7 +85,7 @@ function PrintBill({ bundle, stock, order = {} }) {
         hr { border: none; border-top: 2px solid #000; }
         table { border-collapse: collapse; }
       `}</style>
-
+<a href="/dashboard">Go Back</a>
       <div id="print-wrapper">
           {/* Centered Logo Overlay */}
           <img

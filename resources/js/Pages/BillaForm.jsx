@@ -84,7 +84,9 @@ const BillaForm = () => {
   };
 
   return (
-    <form onSubmit={handleSubmit} className="max-w-2xl mx-auto bg-gray-50 p-8 rounded-xl shadow-lg">
+    <div>
+      <a href="/dashboard">Go Back</a>
+      <form onSubmit={handleSubmit} className="max-w-2xl mx-auto bg-gray-50 p-8 rounded-xl shadow-lg">
       <h1 className="text-2xl font-bold mb-6 text-center">Billa Form</h1>
 
       {/* Live Lot Preview */}
@@ -171,7 +173,8 @@ const BillaForm = () => {
         </label>
       </div>
       <button type="submit" className="w-full py-3 bg-blue-600 text-white font-bold rounded-lg shadow hover:bg-blue-700 transition">Submit</button>
-    </form>
+    </form></div>
+    
   );
 };
 

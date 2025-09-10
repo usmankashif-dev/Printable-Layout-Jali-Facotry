@@ -18,6 +18,7 @@ function PrintContent({ bundle, stock, order = {} }) {
           }
         }
       `}</style>
+          <a href="/dashboard">Go Back</a>
 
       <div
         id="contentarea"
