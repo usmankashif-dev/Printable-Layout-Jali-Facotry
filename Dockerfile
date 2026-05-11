@@ -6,11 +6,11 @@ FROM php:8.2-fpm AS build
 RUN apt-get update && apt-get install -y \
     git curl unzip zip \
     libpng-dev libjpeg62-turbo-dev libfreetype6-dev \
-    libzip-dev libonig-dev libxml2-dev \
+    libzip-dev libonig-dev libxml2-dev libpq-dev \
     nodejs npm
 
 RUN docker-php-ext-configure gd --with-freetype --with-jpeg \
-    && docker-php-ext-install gd pdo pdo_mysql mbstring zip exif pcntl
+    && docker-php-ext-install gd pdo pdo_pgsql pgsql mbstring zip exif pcntl
 
 COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
 
@@ -32,9 +32,9 @@ FROM php:8.2-fpm
 RUN apt-get update && apt-get install -y \
     nginx curl git unzip zip \
     libpng-dev libjpeg62-turbo-dev libfreetype6-dev \
-    libzip-dev libonig-dev libxml2-dev \
+    libzip-dev libonig-dev libxml2-dev libpq-dev \
     && docker-php-ext-configure gd --with-freetype --with-jpeg \
-    && docker-php-ext-install gd pdo pdo_mysql mbstring zip exif pcntl
+    && docker-php-ext-install gd pdo pdo_pgsql pgsql mbstring zip exif pcntl
 
 WORKDIR /app
 
