@@ -49,17 +49,13 @@ FROM php:8.2-fpm
 
 # Install runtime dependencies only
 RUN apt-get update && apt-get install -y --no-install-recommends \
-    libpng16-16 \
-    libjpeg62-turbo \
-    libfreetype6 \
-    libonig5 \
-    libxml2 \
-    libzip4 \
     nginx \
     supervisor \
     curl \
     sqlite3 \
     git \
+    libfreetype6 \
+    libjpeg62-turbo \
     && rm -rf /var/lib/apt/lists/*
 
 # Copy PHP extensions from builder
