@@ -1,91 +1,55 @@
-# Build stage
-FROM php:8.2-fpm AS builder
+# -------------------------
+# BUILD STAGE
+# -------------------------
+FROM php:8.2-fpm AS build
 
-# Install system dependencies and build tools
-RUN apt-get update && apt-get install -y --no-install-recommends \
-    build-essential \
-    libpng-dev \
-    libjpeg62-turbo-dev \
-    libfreetype6-dev \
-    libonig-dev \
-    libxml2-dev \
-    libzip-dev \
-    zip \
-    unzip \
-    curl \
-    git \
-    sqlite3 \
-    libsqlite3-dev \
-    && rm -rf /var/lib/apt/lists/*
+RUN apt-get update && apt-get install -y \
+    git curl unzip zip libpng-dev libjpeg-dev libfreetype6-dev \
+    libzip-dev libonig-dev libxml2-dev nodejs npm \
+    && docker-php-ext-install pdo pdo_mysql mbstring zip exif pcntl
 
-# Install PHP extensions
-RUN docker-php-ext-configure gd --with-freetype --with-jpeg \
-    && docker-php-ext-install -j$(nproc) gd pdo pdo_sqlite pdo_mysql bcmath ctype json mbstring openssl tokenizer xml zip
-
-# Install Composer
-RUN curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer
-
-# Install Node.js
-RUN curl -fsSL https://deb.nodesource.com/setup_20.x | bash - \
-    && apt-get install -y --no-install-recommends nodejs \
-    && rm -rf /var/lib/apt/lists/*
+# Composer
+COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
 
 WORKDIR /app
 
-# Copy composer files
-COPY composer.json composer.lock ./
+# Copy everything first (important for proper installs)
+COPY . .
 
-# Install PHP dependencies
-RUN composer install --no-dev --optimize-autoloader --no-interaction
+# PHP dependencies
+RUN composer install --no-dev --optimize-autoloader
 
-# Copy package files
-COPY package.json package-lock.json ./
+# React build (Vite / CRA both fine)
+RUN npm install
+RUN npm run build
 
-# Install node dependencies and build assets
-RUN npm ci && npm run build
 
-# Runtime stage
+# -------------------------
+# PRODUCTION STAGE
+# -------------------------
 FROM php:8.2-fpm
 
-# Install runtime dependencies only
-RUN apt-get update && apt-get install -y --no-install-recommends \
-    nginx \
-    supervisor \
-    curl \
-    sqlite3 \
-    git \
-    libfreetype6 \
-    libjpeg62-turbo \
-    && rm -rf /var/lib/apt/lists/*
-
-# Copy PHP extensions from builder
-COPY --from=builder /usr/local/lib/php/extensions /usr/local/lib/php/extensions
-COPY --from=builder /usr/local/etc/php/conf.d /usr/local/etc/php/conf.d
+RUN apt-get update && apt-get install -y \
+    nginx curl zip unzip git \
+    libpng-dev libjpeg-dev libfreetype6-dev libzip-dev \
+    && docker-php-ext-install pdo pdo_mysql mbstring zip
 
 WORKDIR /app
 
-# Copy application files from builder
-COPY --from=builder /app /app
+# Copy built app
+COPY --from=build /app /app
 
-# Copy only necessary files
-COPY . /app
-
-# Create necessary directories
-RUN mkdir -p /app/storage/logs /app/storage/framework/sessions /app/storage/framework/views /app/storage/framework/cache \
-    && chown -R www-data:www-data /app \
+# Permissions
+RUN chown -R www-data:www-data /app \
     && chmod -R 775 /app/storage /app/bootstrap/cache
 
-# Configure nginx
+# Nginx config
 COPY docker/nginx.conf /etc/nginx/nginx.conf
-COPY docker/default.conf /etc/nginx/sites-available/default
 
-# Configure supervisor
-COPY docker/supervisord.conf /etc/supervisor/conf.d/supervisord.conf
-
-# Copy start script
-COPY docker/start.sh /usr/local/bin/start.sh
-RUN chmod +x /usr/local/bin/start.sh
+# Start script
+COPY docker/start.sh /start.sh
+RUN chmod +x /start.sh
 
 EXPOSE 80
 
-CMD ["/usr/local/bin/start.sh"]
+CMD ["/start.sh"]
