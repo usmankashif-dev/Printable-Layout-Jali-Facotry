@@ -47,8 +47,8 @@ RUN npm ci && npm run build
 FROM php:8.2-fpm
 
 # Install system dependencies
-RUN apt-get update && apt-get install -y \
-    libpng6 \
+RUN apt-get update && apt-get install -y --no-install-recommends \
+    libpng16-16 \
     libjpeg62-turbo \
     libfreetype6 \
     nginx \
@@ -56,6 +56,7 @@ RUN apt-get update && apt-get install -y \
     curl \
     sqlite3 \
     libsqlite3-dev \
+    git \
     && rm -rf /var/lib/apt/lists/*
 
 # Install PHP extensions
