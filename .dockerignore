@@ -26,6 +26,5 @@ public/hot
 docker-compose.yml
 Dockerfile
 .dockerignore
-composer.lock
 .github
 tests
