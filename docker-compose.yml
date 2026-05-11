@@ -1,0 +1,38 @@
+version: '3.8'
+
+services:
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    ports:
+      - "8080:80"
+    environment:
+      - APP_ENV=local
+      - APP_DEBUG=true
+      - APP_KEY=
+      - DB_CONNECTION=sqlite
+      - DB_DATABASE=/app/storage/database.sqlite
+      - CACHE_DRIVER=file
+      - SESSION_DRIVER=file
+      - QUEUE_CONNECTION=database
+      - LOG_CHANNEL=single
+    volumes:
+      - .:/app
+      - /app/vendor
+      - /app/node_modules
+    depends_on:
+      - redis
+    networks:
+      - laravel
+
+  redis:
+    image: redis:7-alpine
+    ports:
+      - "6379:6379"
+    networks:
+      - laravel
+
+networks:
+  laravel:
+    driver: bridge
