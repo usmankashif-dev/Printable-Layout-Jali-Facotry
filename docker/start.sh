@@ -3,29 +3,19 @@ set -e
 
 echo "Starting Laravel application..."
 
-# Generate APP_KEY if not set
-if [ -z "$APP_KEY" ]; then
-    echo "Generating APP_KEY..."
-    php /app/artisan key:generate --no-interaction
+# NEVER generate key in production
+echo "Skipping APP_KEY generation (use Render env vars)"
+
+# Cache config (safe)
+php /app/artisan config:cache
+php /app/artisan route:cache
+php /app/artisan view:cache
+
+# OPTIONAL: migrations (ONLY if you really want auto-migrate)
+if [ "$RUN_MIGRATIONS" = "true" ]; then
+    echo "Running migrations..."
+    php /app/artisan migrate --force
 fi
 
-# Run migrations
-echo "Running database migrations..."
-php /app/artisan migrate --force --no-interaction
-
-# Clear caches
-echo "Clearing caches..."
-php /app/artisan config:clear
-php /app/artisan cache:clear
-php /app/artisan view:clear
-php /app/artisan route:clear
-
-# Create necessary directories
-mkdir -p /var/log/supervisor
-mkdir -p /app/storage/logs
-
-# Fix permissions
-chown -R www-data:www-data /app/storage /app/bootstrap/cache
-
-echo "Starting services with supervisor..."
-exec /usr/bin/supervisord -c /etc/supervisor/conf.d/supervisord.conf
+echo "Starting PHP-FPM..."
+php-fpm
